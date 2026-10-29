@@ -41,7 +41,7 @@ const PROFILE = {
   linkedin: 'https://www.linkedin.com/in/marco-d%C3%ADaz-420562205/',
   github: 'https://github.com/YOUR-GITHUB-USERNAME',
   cvPath: '/Marco_Diaz_Fullstack_CV (IR).pdf',
-  ImgProfile: '/ImgProfile.jpg',
+  ImgProfile: '/imageProfile.jpeg',
   IconLogoDark: '/LogotipoMDModoOscuro.png',
   IconLogoLight: '/LogotipoMDModoClaro.png',
 }
