@@ -36,7 +36,7 @@ function GitHubIcon({ size = 17 }: { size?: number }) {
 const PROFILE = {
   name: 'Marco Díaz',
   role: 'Full-Stack Developer',
-  location: 'Ireland',
+  location: 'Mexico & Ireland',
   email: 'marco98diaz56@gmail.com',
   linkedin: 'https://www.linkedin.com/in/marco-d%C3%ADaz-420562205/',
   github: 'https://github.com/YOUR-GITHUB-USERNAME',
@@ -110,7 +110,7 @@ const experience = [
   {
     role: 'Full-Stack Developer',
     company: 'BEPP',
-    period: 'Mar 2024 – Jan 2026',
+    period: 'Mar 2024 – Aug 2026',
     details:
       'Worked on healthcare applications, integrations and migration of application functionality to OutSystems.',
   },
@@ -121,6 +121,14 @@ const experience = [
     details:
       'Worked on software related to vehicle geolocation and billing workflows.',
   },
+]
+
+const navLinks = [
+  ['About', '#about'],
+  ['Projects', '#projects'],
+  ['Stack', '#stack'],
+  ['Experience', '#experience'],
+  ['Contact', '#contact'],
 ]
 
 function App() {
@@ -135,6 +143,7 @@ function App() {
   })
 
   const [menuOpen, setMenuOpen] = useState(false)
+  const [menuClosing, setMenuClosing] = useState(false)
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -146,93 +155,191 @@ function App() {
     }
   }, [theme])
 
-  function closeMenu() {
-    setMenuOpen(false)
-  }
+  function openMenu() {
+  setMenuClosing(false)
+  setMenuOpen(true)
+}
 
-  return (
-    <div className="min-h-screen overflow-x-hidden pt-[96px]">
-      <header
-        className="fixed inset-x-0 top-0 z-50 border-b backdrop-blur-xl"
-        style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}
+function closeMenu() {
+  if (!menuOpen || menuClosing) return
+
+  setMenuClosing(true)
+}
+
+ return (
+  <div className="min-h-screen overflow-x-hidden">
+
+    {/* DESKTOP SIDEBAR */}
+    <aside className="sidebar-glass sidebar-enter hidden md:flex">
+      <a
+        href="#home"
+        onClick={closeMenu}
+        className="sidebar-brand"
       >
-        <div className="container flex min-h-[96px] items-center justify-between gap-4">
-          <a href="#home" onClick={closeMenu} className="flex items-center gap-3">
+        <img
+          src={theme === 'dark'
+            ? PROFILE.IconLogoDark
+            : PROFILE.IconLogoLight}
+          alt="Logo"
+          className="h-10 w-10 rounded-full object-cover"
+        />
+
+        <span>{PROFILE.name}</span>
+      </a>
+
+      <div className="sidebar-divider" />
+
+      <p className="sidebar-label">MENU</p>
+
+      <nav className="sidebar-nav">
+        {navLinks.map(([label, href], index) => (
+          <a
+            key={href}
+            href={href}
+            className="sidebar-link"
+            style={{
+              animationDelay: `${350 + index * 120}ms`,
+            }}
+          >
+            <span className="sidebar-link-indicator" />
+            {label}
+          </a>
+        ))}
+      </nav>
+
+      <div className="sidebar-bottom">
+        <div className="sidebar-divider" />
+
+        <p className="sidebar-label">APPEARANCE</p>
+
+        <button
+          type="button"
+          onClick={() =>
+            setTheme(theme === 'dark' ? 'light' : 'dark')
+          }
+          className="sidebar-theme-button"
+          aria-label="Change theme"
+        >
+          {theme === 'dark'
+            ? <Sun size={17} />
+            : <Moon size={17} />}
+
+          <span>
+            {theme === 'dark' ? 'Bone Metallic' : 'Bone Night'}
+          </span>
+        </button>
+
+        <p className="sidebar-footer-text">
+          © {new Date().getFullYear()} {PROFILE.name} V2.1.0
+        </p>
+      </div>
+    </aside>
+
+
+    {/* MOBILE MENU BUTTON */}
+    <button
+      type="button"
+      className="mobile-menu-button md:hidden"
+      onClick={() => {
+        if (menuOpen && !menuClosing) {
+          closeMenu()
+        } else {
+          openMenu()
+        }
+      }}
+      aria-label={menuOpen && !menuClosing ? 'Close navigation' : 'Open navigation'}
+      aria-expanded={menuOpen && !menuClosing}
+    >
+      {menuOpen && !menuClosing ? <X size={20} /> : <Menu size={20} />}
+    </button>
+
+
+    {/* MOBILE SIDEBAR */}
+    {menuOpen && (
+  <div
+    className={`mobile-sidebar-overlay md:hidden ${menuClosing ? 'mobile-menu-closing' : ''}`}
+    onAnimationEnd={(event) => {
+      if (
+        menuClosing &&
+        event.target === event.currentTarget
+      ) {
+        setMenuOpen(false)
+        setMenuClosing(false)
+      }
+    }}> 
+
+        <button
+          className="mobile-sidebar-backdrop"
+          onClick={closeMenu}
+          aria-label="Close menu"
+        />
+
+        <aside className={`sidebar-glass ${menuClosing ? 'mobile-sidebar-exit' : 'mobile-sidebar-enter'}`}>
+          <a
+            href="#home"
+            onClick={closeMenu}
+            className="sidebar-brand"
+          >
             <img
-                src={theme === 'dark' ? PROFILE.IconLogoDark : PROFILE.IconLogoLight}
-                alt="Logo"
-                className="h-10 w-10 scale-[1.5] rounded-full object-cover"
-              />
-            <span className="font-bold tracking-tight">{PROFILE.name}</span>
+              src={theme === 'dark'
+                ? PROFILE.IconLogoDark
+                : PROFILE.IconLogoLight}
+              alt="Logo"
+              className="h-10 w-10 rounded-full object-cover"
+            />
+
+            <span>{PROFILE.name}</span>
           </a>
 
-          <nav className="hidden items-center gap-6 md:flex">
-            {[
-              ['About', '#about'],
-              ['Projects', '#projects'],
-              ['Stack', '#stack'],
-              ['Experience', '#experience'],
-              ['Contact', '#contact'],
-            ].map(([label, href]) => (
-              <a
-                key={href}
-                className="text-sm"
-                style={{ color: 'var(--muted)' }}
-                href={href}
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
+          <div className="sidebar-divider" />
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="grid size-10 place-items-center rounded-xl border"
-              style={{ borderColor: 'var(--border)' }}
-            >
-              {theme === 'dark' ? <Sun size={19} /> : <Moon size={19} />}
-            </button>
+          <p className="sidebar-label">MENU</p>
 
-            <button
-              type="button"
-              aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="grid size-10 place-items-center rounded-xl border md:hidden"
-              style={{ borderColor: 'var(--border)' }}
-            >
-              {menuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-        </div>
-
-        {menuOpen && (
-          <nav className="container flex flex-col gap-1 pb-4 md:hidden">
-            {[
-              ['About', '#about'],
-              ['Projects', '#projects'],
-              ['Stack', '#stack'],
-              ['Experience', '#experience'],
-              ['Contact', '#contact'],
-            ].map(([label, href]) => (
+          <nav className="sidebar-nav">
+            {navLinks.map(([label, href], index) => (
               <a
                 key={href}
                 href={href}
                 onClick={closeMenu}
-                className="rounded-lg px-3 py-3"
-                style={{ color: 'var(--muted)' }}
+                className="sidebar-link"
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                }}
               >
+                <span className="sidebar-link-indicator" />
                 {label}
               </a>
             ))}
           </nav>
-        )}
-      </header>
 
-      <main>
+          <div className="sidebar-bottom">
+            <div className="sidebar-divider" />
+
+            <p className="sidebar-label">APPEARANCE</p>
+
+            <button
+              type="button"
+              onClick={() =>
+                setTheme(theme === 'dark' ? 'light' : 'dark')
+              }
+              className="sidebar-theme-button"
+            >
+              {theme === 'dark'
+                ? <Sun size={17} />
+                : <Moon size={17} />}
+
+              <span>
+                {theme === 'dark' ? 'Bone Metallic' : 'Bone Night'}
+              </span>
+            </button>
+          </div>
+
+        </aside>
+      </div>
+    )}
+
+    {/* MAIN CONTENT */}
+    <main className="md:ml-[270px]">
         <section id="home" className="relative" style={ { marginTop: '-4rem !important' } }>
           <div
             className="pointer-events-none absolute inset-0"
@@ -242,7 +349,7 @@ function App() {
             }}
           />
 
-          <div className="container relative grid items-center gap-12 py-24 md:grid-cols-[1.3fr_0.7fr] md:py-32">
+          <div className="container relative grid items-center gap-12 py-24 md:grid-cols-[1.3fr_0.7fr] md:py-32" style={{ paddingTop: '25px !important' }}>
             <div>
               <p className="eyebrow mb-6 flex items-center gap-2">
                 <span
@@ -255,7 +362,7 @@ function App() {
               <h1 className="max-w-3xl text-5xl font-black leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
                 Building software that{' '}
                 <span style={{ color: 'var(--accent)' }}>
-                  solves real problems.
+                  solves problems.
                 </span>
               </h1>
 
@@ -550,7 +657,7 @@ function App() {
       </main>
 
       <footer
-        className="border-t py-6"
+        className="border-t py-6 md:ml-[270px]"
         style={{ borderColor: 'var(--border)' }}
       >
         <div className="container flex flex-col justify-between gap-3 text-sm sm:flex-row">
